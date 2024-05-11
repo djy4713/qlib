@@ -1,0 +1,19 @@
+[2024-05-07 18:31:23 +0800] [5975] [INFO] Starting gunicorn 20.1.0
+[2024-05-07 18:31:23 +0800] [5975] [INFO] Listening at: http://0.0.0.0:8080 (5975)
+[2024-05-07 18:31:23 +0800] [5975] [INFO] Using worker: sync
+[2024-05-07 18:31:23 +0800] [5999] [INFO] Booting worker with pid: 5999
+WARNING:root:Malformed experiment '0'. Detailed error Yaml file './mlruns/0/meta.yaml' does not exist.
+Traceback (most recent call last):
+  File "/root/anaconda3/envs/qlib/lib/python3.8/site-packages/mlflow/store/tracking/file_store.py", line 271, in list_experiments
+    experiment = self._get_experiment(exp_id, view_type)
+  File "/root/anaconda3/envs/qlib/lib/python3.8/site-packages/mlflow/store/tracking/file_store.py", line 405, in _get_experiment
+    meta = FileStore._read_yaml(experiment_dir, FileStore.META_DATA_FILE_NAME)
+  File "/root/anaconda3/envs/qlib/lib/python3.8/site-packages/mlflow/store/tracking/file_store.py", line 1101, in _read_yaml
+    return _read_helper(root, file_name, attempts_remaining=retries)
+  File "/root/anaconda3/envs/qlib/lib/python3.8/site-packages/mlflow/store/tracking/file_store.py", line 1094, in _read_helper
+    result = read_yaml(root, file_name)
+  File "/root/anaconda3/envs/qlib/lib/python3.8/site-packages/mlflow/utils/file_utils.py", line 182, in read_yaml
+    raise MissingConfigException("Yaml file '%s' does not exist." % file_path)
+mlflow.exceptions.MissingConfigException: Yaml file './mlruns/0/meta.yaml' does not exist.
+WARNING:root:Wrong experiment ID (1) recorded for run 'e5f48d085e854b1f938d87c676172d26'. It should be 0. Run will be ignored.
+NoneType: None

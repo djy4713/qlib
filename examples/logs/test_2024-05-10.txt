@@ -1,0 +1,90 @@
+/root/anaconda3/envs/qlib/lib/python3.8/site-packages/akshare/__init__.py:2794: UserWarning: 为了支持更多特性，请将 Pandas 升级到 2.2.0 及以上版本！
+  warnings.warn(
+/root/anaconda3/envs/qlib/lib/python3.8/site-packages/akshare/__init__.py:2799: UserWarning: 为了支持更多特性，请将 Python 升级到 3.9.0 及以上版本！
+  warnings.warn(
+[22198:MainThread](2024-05-10 19:01:02,859) INFO - qlib.Initialization - [config.py:416] - default_conf: client.
+[22198:MainThread](2024-05-10 19:01:02,861) INFO - qlib.Initialization - [__init__.py:74] - qlib successfully initialized based on client settings.
+[22198:MainThread](2024-05-10 19:01:02,861) INFO - qlib.Initialization - [__init__.py:76] - data_path={'__DEFAULT_FREQ': PosixPath('/data/workspace/quantify/qlib_data/cn_data')}
+ModuleNotFoundError. CatBoostModel are skipped. (optional: maybe installing CatBoostModel can fix it.)
+ModuleNotFoundError. XGBModel is skipped(optional: maybe installing xgboost can fix it).
+[22198:MainThread](2024-05-10 19:01:16,931) INFO - qlib.timer - [log.py:127] - Time cost: 12.684s | Loading data Done
+[22198:MainThread](2024-05-10 19:01:17,830) INFO - qlib.timer - [log.py:127] - Time cost: 0.192s | DropCol Done
+/root/anaconda3/envs/qlib/lib/python3.8/site-packages/pyqlib-0.9.4-py3.8-linux-x86_64.egg/qlib/data/dataset/processor.py:301: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df[self.cols] = X
+[22198:MainThread](2024-05-10 19:01:47,289) INFO - qlib.timer - [log.py:127] - Time cost: 29.458s | RobustZScoreNorm Done
+[22198:MainThread](2024-05-10 19:01:48,068) INFO - qlib.timer - [log.py:127] - Time cost: 0.779s | Fillna Done
+[22198:MainThread](2024-05-10 19:01:48,662) INFO - qlib.timer - [log.py:127] - Time cost: 0.334s | DropnaLabel Done
+/root/anaconda3/envs/qlib/lib/python3.8/site-packages/pyqlib-0.9.4-py3.8-linux-x86_64.egg/qlib/data/dataset/processor.py:363: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df[cols] = t
+[22198:MainThread](2024-05-10 19:01:49,211) INFO - qlib.timer - [log.py:127] - Time cost: 0.548s | CSRankNorm Done
+[22198:MainThread](2024-05-10 19:01:49,244) INFO - qlib.timer - [log.py:127] - Time cost: 32.313s | fit & process data Done
+[22198:MainThread](2024-05-10 19:01:49,245) INFO - qlib.timer - [log.py:127] - Time cost: 44.997s | Init data Done
+[22198:MainThread](2024-05-10 19:01:49,247) INFO - qlib.workflow - [exp.py:258] - Experiment 4 starts running ...
+[22198:MainThread](2024-05-10 19:01:49,565) INFO - qlib.workflow - [recorder.py:341] - Recorder ba3e20afbf8d494bac16c8838c6ff91e starts running under Experiment 4 ...
+[22198:MainThread](2024-05-10 19:01:49,965) INFO - qlib.workflow - [record_temp.py:198] - Signal record 'pred.pkl' has been saved as the artifact of the Experiment 4
+[22198:MainThread](2024-05-10 19:01:50,490) INFO - qlib.backtest caller - [__init__.py:93] - Create new exchange
+'The following are prediction results of the DNNModelPytorch model.'
+                          score
+datetime   instrument          
+2024-04-02 SH600000    0.129335
+           SH600009   -0.005610
+           SH600010   -0.122107
+           SH600011    0.088500
+           SH600015    0.136401
+{'IC': 0.018699354624165245,
+ 'ICIR': 0.11011524383625378,
+ 'Rank IC': 0.040449605107836774,
+ 'Rank ICIR': 0.204205999416808}
+[22198:MainThread](2024-05-10 19:01:54,226) WARNING - qlib.BaseExecutor - [executor.py:121] - `common_infra` is not set for <qlib.backtest.executor.SimulatorExecutor object at 0x7fe09f725c40>
+backtest loop:   0%|          | 0/1 [00:00<?, ?it/s]backtest loop: 100%|██████████| 1/1 [00:00<00:00, 157.27it/s]
+[22198:MainThread](2024-05-10 19:01:54,246) INFO - qlib.workflow - [record_temp.py:515] - Portfolio analysis record 'port_analysis_1day.pkl' has been saved as the artifact of the Experiment 4
+[22198:MainThread](2024-05-10 19:01:54,254) INFO - qlib.workflow - [record_temp.py:540] - Indicator analysis record 'indicator_analysis_1day.pkl' has been saved as the artifact of the Experiment 4
+[22198:MainThread](2024-05-10 19:01:56,458) INFO - qlib.timer - [log.py:127] - Time cost: 0.000s | waiting `async_log` Done
+'The following are analysis results of benchmark return(1day).'
+                       risk
+mean               0.000469
+std                     NaN
+annualized_return  0.111728
+information_ratio       NaN
+max_drawdown       0.000000
+'The following are analysis results of the excess return without cost(1day).'
+                       risk
+mean              -0.000469
+std                     NaN
+annualized_return -0.111728
+information_ratio       NaN
+max_drawdown       0.000000
+'The following are analysis results of the excess return with cost(1day).'
+                       risk
+mean              -0.000940
+std                     NaN
+annualized_return -0.223702
+information_ratio       NaN
+max_drawdown       0.000000
+'The following are analysis results of indicators(1day).'
+     value
+ffr    1.0
+pa     0.0
+pos    0.0
+send_result: logs/result/test_2024-05-10.txt 
+ 
+----------------------  2024-05-10 00:00:00 ----------------------
+cash:6299.9517
+now_account_value:99952.9524
+SH601916 浙商银行 {'amount': '25065.6806', 'price': '0.7465', 'weight': '0.1872', 'count_day': '1.0000'}
+SH601288 农业银行 {'amount': '5798.3655', 'price': '3.2407', 'weight': '0.1880', 'count_day': '1.0000'}
+SZ000895 双汇发展 {'amount': '908.0472', 'price': '20.5826', 'weight': '0.1870', 'count_day': '1.0000'}
+SH601398 工商银行 {'amount': '5136.0398', 'price': '3.6799', 'weight': '0.1891', 'count_day': '1.0000'}
+SH600919 江苏银行 {'amount': '14349.8140', 'price': '1.2935', 'weight': '0.1857', 'count_day': '1.0000'}
+
+---------------------- today trade list  ----------------------
+
+send_result status_code:200

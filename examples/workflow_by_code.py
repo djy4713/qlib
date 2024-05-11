@@ -18,7 +18,7 @@ from qlib.tests.config import CSI300_BENCH, CSI300_GBDT_TASK
 
 if __name__ == "__main__":
     # use default data
-    provider_uri = "~/.qlib/qlib_data/cn_data"  # target_dir
+    provider_uri = "/data/workspace/quantify/qlib_data/cn_data"  # target_dir
     GetData().qlib_data(target_dir=provider_uri, region=REG_CN, exists_skip=True)
     qlib.init(provider_uri=provider_uri, region=REG_CN)
 
@@ -72,6 +72,7 @@ if __name__ == "__main__":
 
         # prediction
         recorder = R.get_recorder()
+        print("---------------------------:", recorder.id, recorder.experiment_id)
         sr = SignalRecord(model, dataset, recorder)
         sr.generate()
 

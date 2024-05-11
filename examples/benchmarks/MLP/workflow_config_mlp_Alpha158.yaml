@@ -1,40 +1,38 @@
 qlib_init:
-    provider_uri: "~/.qlib/qlib_data/cn_data"
+    provider_uri: "/data/workspace/quantify/qlib_data/cn_data"
     region: cn
 market: &market csi300
 benchmark: &benchmark SH000300
+filter: &filter
+    filter_type: ExpressionDFilter
+    rule_expression: "$close/$factor > 10"
+    filter_start_time: 2008-01-01
+    filter_end_time: 2023-01-01
+    keep: False
 data_handler_config: &data_handler_config
     start_time: 2008-01-01
-    end_time: 2020-08-01
+    end_time: 2023-01-01
     fit_start_time: 2008-01-01
-    fit_end_time: 2014-12-31
+    fit_end_time: 2018-12-31
     instruments: *market
-    infer_processors: [
-        {
-            "class" : "DropCol", 
-            "kwargs":{"col_list": ["VWAP0"]}
-        },
-        {
-             "class" : "CSZFillna", 
-             "kwargs":{"fields_group": "feature"}
-        }
-    ]
-    learn_processors: [
-        {
-            "class" : "DropCol", 
-            "kwargs":{"col_list": ["VWAP0"]}
-        },
-        {
-            "class" : "DropnaProcessor", 
-            "kwargs":{"fields_group": "feature"}
-        },
-        "DropnaLabel",
-        {
-            "class": "CSZScoreNorm", 
-            "kwargs": {"fields_group": "label"}
-        }
-    ]
-    process_type: "independent"
+    filter_pipe: [*filter]
+    infer_processors:
+        - class: DropCol
+          kwargs:
+              col_list: ["VWAP0"]
+        - class: RobustZScoreNorm
+          kwargs:
+              fields_group: feature
+              clip_outlier: true
+        - class: Fillna
+          kwargs:
+              fields_group: feature
+    learn_processors:
+        - class: DropnaLabel
+        - class: CSRankNorm
+          kwargs:
+              fields_group: label
+    label: ["Ref($close, -2) / Ref($close, -1) - 1"]
 
 port_analysis_config: &port_analysis_config
     strategy:
@@ -45,16 +43,17 @@ port_analysis_config: &port_analysis_config
             topk: 50
             n_drop: 5
     backtest:
-        start_time: 2017-01-01
-        end_time: 2020-08-01
-        account: 100000000
+        start_time: 2022-01-01
+        end_time: 2023-01-01
+        account: 1000000
         benchmark: *benchmark
         exchange_kwargs:
             limit_threshold: 0.095
-            deal_price: close
+            deal_price: "Ref($open, -1)"
             open_cost: 0.0005
             close_cost: 0.0015
             min_cost: 5
+            impact_cost: 0.1
 task:
     model:
         class: DNNModelPytorch
@@ -64,6 +63,7 @@ task:
             lr: 0.002
             optimizer: adam
             max_steps: 8000
+            early_stop_rounds: 100
             batch_size: 8192
             GPU: 0
             weight_decay: 0.0002
@@ -78,9 +78,9 @@ task:
                 module_path: qlib.contrib.data.handler
                 kwargs: *data_handler_config
             segments:
-                train: [2008-01-01, 2014-12-31]
-                valid: [2015-01-01, 2016-12-31]
-                test: [2017-01-01, 2020-08-01]
+                train: [2008-01-01, 2018-12-31]
+                valid: [2019-01-01, 2021-12-31]
+                test: [2022-01-01, 2023-01-01]
     record: 
         - class: SignalRecord
           module_path: qlib.workflow.record_temp
