@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
+import json, os
 import akshare as ak
+from datetime import datetime
 import qlib, yaml, sys, requests
 from qlib.workflow import R
 from qlib.constant import REG_CN
+from chinese_calendar import is_workday
 from qlib.utils import init_instance_by_config
 from qlib.workflow.record_temp import SignalRecord, PortAnaRecord, SigAnaRecord
 qlib.init(provider_uri="/data/workspace/quantify/qlib_data/cn_data", region=REG_CN)
@@ -11,9 +13,20 @@ qlib.init(provider_uri="/data/workspace/quantify/qlib_data/cn_data", region=REG_
 if len(sys.argv) <= 2:
     print("usage python test.py $start_date $end_date")
     exit(0)
-
 backtest_start_date = sys.argv[1]
 backtest_end_date = sys.argv[2]
+
+if len(sys.argv) > 3:
+    if not is_workday(datetime.strptime(backtest_end_date, "%Y-%m-%d")):
+        print(f"{backtest_end_date} is not workday")
+        exit(0)
+    file = "qlib_bin.tar.gz"
+    root="/data/workspace/quantify/qlib_data/cn_data/"
+    os.system(f"wget https://github.com/chenditc/investment_data/releases/download/{backtest_end_date}/{file} .")
+    if os.path.exists(file):
+        os.system(f"rm -r {root}; mkdir -p {root}; mv {file} {root};")
+        os.system(f"cd {root}; tar -xf {file}; mv qlib_bin/* .; rm -r qlib_bin")
+
 config = yaml.load(open('test.yaml', 'rb'), Loader=yaml.FullLoader)
 config['filter']['filter_end_time'] = backtest_end_date
 config['data_handler_config']['end_time'] = backtest_end_date
@@ -95,6 +108,14 @@ with R.start(experiment_name="test"):
             else:
                 value = "{:.4f}".format(value)
                 fout.write(f"{key}:{value}\n")
+    timestamp, position = positions[-1]
+    date = timestamp.strftime("%Y-%m-%d")
+    # url = "http://175.178.225.245:8080/save_predict_daily"
+    # headers = {'Content-Type': 'application/json'}
+    # data = {"date":date, "position":position.position}
+    # response = requests.post(url, headers=headers, data=json.dumps(data)).json()
+    print(f"send predict daily: {date} {position.position}")
+    json.dump(position.position, open(f"logs/result/daily/{date}", "w"))
     
     fout.write("\n---------------------- tomorrow trade list  ----------------------\n")
     if len(positions) >= 2:
