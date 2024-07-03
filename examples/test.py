@@ -10,6 +10,19 @@ from qlib.utils import init_instance_by_config
 from qlib.workflow.record_temp import SignalRecord, PortAnaRecord, SigAnaRecord
 qlib.init(provider_uri="/data/workspace/quantify/qlib_data/cn_data", region=REG_CN)
 
+def send_result(text):
+    print("send_result:", text)
+    data = {
+        "msgtype": "text",
+        "text": {
+            "content": text
+        }
+    }
+    json_data = json.dumps(data)
+    url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=c182e6ee-96b9-4b73-9144-1006a28dd48a"
+    response = requests.post(url, data=json_data, headers={"Content-Type": "application/json"})
+    print(f"send_result status_code:{response.status_code}")
+
 if len(sys.argv) <= 2:
     print("usage python test.py $start_date $end_date")
     exit(0)
@@ -17,15 +30,20 @@ backtest_start_date = sys.argv[1]
 backtest_end_date = sys.argv[2]
 
 if len(sys.argv) > 3:
-    if not is_workday(datetime.strptime(backtest_end_date, "%Y-%m-%d")):
-        print(f"{backtest_end_date} is not workday")
+    if not is_workday(datetime.now()):
+        print(f"{datetime.now()} is not workday")
         exit(0)
     file = "qlib_bin.tar.gz"
     root="/data/workspace/quantify/qlib_data/cn_data/"
-    os.system(f"wget https://github.com/chenditc/investment_data/releases/download/{backtest_end_date}/{file} .")
+    file_url = f"https://github.com/chenditc/investment_data/releases/download/{backtest_end_date}/{file}"
+    os.system(f"wget {file_url} .")
     if os.path.exists(file):
         os.system(f"rm -r {root}; mkdir -p {root}; mv {file} {root};")
         os.system(f"cd {root}; tar -xf {file}; mv qlib_bin/* .; rm -r qlib_bin")
+    else:
+        print(f"fatal error: {file_url} not found!!!")
+        send_result(f"fatal error: {backtest_end_date} data not found!!!")
+        exit(0)
 
 config = yaml.load(open('test.yaml', 'rb'), Loader=yaml.FullLoader)
 config['filter']['filter_end_time'] = backtest_end_date
@@ -67,20 +85,6 @@ def get_stock_name(code):
             global_stock_name[code] = getattr(row, 'value')
             return global_stock_name[code]
     return code
-
-def send_result(path):
-    text = open(path).read()
-    print("send_result:", path, "\n", text)
-    data = {
-        "msgtype": "text",
-        "text": {
-            "content": text
-        }
-    }
-    json_data = json.dumps(data)
-    url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=c182e6ee-96b9-4b73-9144-1006a28dd48a"
-    response = requests.post(url, data=json_data, headers={"Content-Type": "application/json"})
-    print(f"send_result status_code:{response.status_code}")
 
 with R.start(experiment_name="test"):
     recorder = R.get_recorder()
@@ -144,5 +148,5 @@ with R.start(experiment_name="test"):
                     value[k] = "{:.4f}".format(float(v))
                 fout.write(f"sell {key} {stock_name} {value}\n")
     fout.close()
-    send_result(path)
+    send_result(open(path).read())
     
