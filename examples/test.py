@@ -8,7 +8,9 @@ from qlib.constant import REG_CN
 from chinese_calendar import is_workday
 from qlib.utils import init_instance_by_config
 from qlib.workflow.record_temp import SignalRecord, PortAnaRecord, SigAnaRecord
-qlib.init(provider_uri="/data/workspace/quantify/qlib_data/cn_data", region=REG_CN)
+
+data_root="/data/workspace/quantify/qlib_data/cn_data/"
+qlib.init(provider_uri=data_root, region=REG_CN)
 
 def send_result(text):
     print("send_result:", text)
@@ -34,12 +36,11 @@ if len(sys.argv) > 3:
         print(f"{datetime.now()} is not workday")
         exit(0)
     file = "qlib_bin.tar.gz"
-    root="/data/workspace/quantify/qlib_data/cn_data/"
     file_url = f"https://github.com/chenditc/investment_data/releases/download/{backtest_end_date}/{file}"
     os.system(f"wget {file_url} .")
     if os.path.exists(file):
-        os.system(f"rm -r {root}; mkdir -p {root}; mv {file} {root};")
-        os.system(f"cd {root}; tar -xf {file}; mv qlib_bin/* .; rm -r qlib_bin")
+        os.system(f"rm -r {data_root}; mkdir -p {data_root}; mv {file} {data_root};")
+        os.system(f"cd {data_root}; tar -xf {file}; mv qlib_bin/* .; rm -r qlib_bin")
     else:
         print(f"fatal error: {file_url} not found!!!")
         send_result(f"fatal error: {backtest_end_date} data not found!!!")
